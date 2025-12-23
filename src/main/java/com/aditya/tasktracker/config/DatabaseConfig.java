@@ -35,8 +35,14 @@ public class DatabaseConfig {
             try {
                 URI dbUri = new URI(databaseUrl);
                 
+                // Get port, use default PostgreSQL port 5432 if not specified
+                int port = dbUri.getPort();
+                if (port == -1) {
+                    port = 5432;
+                }
+                
                 // Convert postgres:// to jdbc:postgresql://
-                String jdbcUrl = "jdbc:postgresql://" + dbUri.getHost() + ":" + dbUri.getPort() + dbUri.getPath();
+                String jdbcUrl = "jdbc:postgresql://" + dbUri.getHost() + ":" + port + dbUri.getPath();
                 
                 if (dbUri.getUserInfo() != null) {
                     String[] credentials = dbUri.getUserInfo().split(":");
