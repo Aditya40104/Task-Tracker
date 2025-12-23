@@ -1,0 +1,339 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin Dashboard | Task Tracker</title>
+
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: "Inter", "Segoe UI", sans-serif;
+            background: #f4f6fb;
+            color: #111827;
+        }
+
+        /* ---------- Header ---------- */
+        .header {
+            background: linear-gradient(135deg, #4f46e5, #7c3aed);
+            padding: 18px 30px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            color: white;
+        }
+
+        .header h1 {
+            font-size: 22px;
+            font-weight: 600;
+        }
+
+        .user-info {
+            display: flex;
+            align-items: center;
+            gap: 20px;
+            font-size: 14px;
+        }
+
+        .logout-btn {
+            background: white;
+            color: #4f46e5;
+            padding: 8px 18px;
+            border-radius: 8px;
+            text-decoration: none;
+            font-weight: 600;
+        }
+
+        .logout-btn:hover {
+            background: #eef2ff;
+        }
+
+        /* ---------- Layout ---------- */
+        .container {
+            max-width: 1200px;
+            margin: 30px auto;
+            padding: 0 20px;
+        }
+
+        /* ---------- Section ---------- */
+        .section {
+            background: white;
+            border-radius: 16px;
+            padding: 30px;
+            box-shadow: 0 10px 25px rgba(0,0,0,0.08);
+            margin-bottom: 30px;
+        }
+
+        .section h2 {
+            font-size: 20px;
+            margin-bottom: 20px;
+            color: #111827;
+        }
+
+        /* ---------- Forms ---------- */
+        .form-row {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+            gap: 18px;
+            margin-bottom: 18px;
+        }
+
+        .form-group {
+            display: flex;
+            flex-direction: column;
+        }
+
+        label {
+            font-size: 13px;
+            font-weight: 600;
+            color: #374151;
+            margin-bottom: 6px;
+        }
+
+        input, select, textarea {
+            padding: 11px 12px;
+            border-radius: 8px;
+            border: 1px solid #d1d5db;
+            font-size: 14px;
+            transition: border 0.2s, box-shadow 0.2s;
+        }
+
+        input:focus, select:focus, textarea:focus {
+            outline: none;
+            border-color: #6366f1;
+            box-shadow: 0 0 0 3px rgba(99,102,241,0.2);
+        }
+
+        textarea {
+            resize: vertical;
+        }
+
+        button {
+            background: linear-gradient(135deg, #6366f1, #7c3aed);
+            color: white;
+            padding: 11px 32px;
+            border: none;
+            border-radius: 10px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: transform 0.15s ease, box-shadow 0.15s ease;
+        }
+
+        button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 20px rgba(99,102,241,0.3);
+        }
+
+        /* ---------- Tables ---------- */
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            font-size: 14px;
+        }
+
+        th, td {
+            padding: 14px 12px;
+            text-align: left;
+            border-bottom: 1px solid #e5e7eb;
+        }
+
+        th {
+            background: #f9fafb;
+            font-weight: 600;
+            color: #374151;
+        }
+
+        tr:hover {
+            background: #f9fafb;
+        }
+
+        /* ---------- Status ---------- */
+        .status-badge {
+            padding: 6px 14px;
+            border-radius: 999px;
+            font-size: 12px;
+            font-weight: 600;
+        }
+
+        .status-todo {
+            background: #fef3c7;
+            color: #92400e;
+        }
+
+        .status-done {
+            background: #dcfce7;
+            color: #166534;
+        }
+
+        /* ---------- Role ---------- */
+        .role-badge {
+            padding: 6px 12px;
+            border-radius: 8px;
+            font-size: 12px;
+            font-weight: 600;
+        }
+
+        .role-admin {
+            background: #e0e7ff;
+            color: #3730a3;
+        }
+
+        .role-employee {
+            background: #f3f4f6;
+            color: #4b5563;
+        }
+
+        @media (max-width: 600px) {
+            table {
+                font-size: 13px;
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+<!-- Header -->
+<div class="header">
+    <h1>Admin Dashboard</h1>
+    <div class="user-info">
+        <span>Welcome, <strong th:text="${employeeName}"></strong></span>
+        <a href="/logout" class="logout-btn">Logout</a>
+    </div>
+</div>
+
+<div class="container">
+
+    <!-- Add Employee -->
+    <div class="section">
+        <h2>Add New Employee</h2>
+        <form method="post" action="/admin/employee/create">
+            <div class="form-row">
+                <div class="form-group">
+                    <label>Name</label>
+                    <input type="text" name="name" required>
+                </div>
+                <div class="form-group">
+                    <label>Email</label>
+                    <input type="email" name="email" required>
+                </div>
+                <div class="form-group">
+                    <label>Password</label>
+                    <input type="password" name="password" required>
+                </div>
+                <div class="form-group">
+                    <label>Role</label>
+                    <select name="role" required>
+                        <option value="EMPLOYEE">Employee</option>
+                        <option value="ADMIN">Admin</option>
+                    </select>
+                </div>
+            </div>
+            <button type="submit">Create Employee</button>
+        </form>
+    </div>
+
+    <!-- Create Task -->
+    <div class="section">
+        <h2>Create New Task</h2>
+        <form method="post" action="/admin/task/create">
+            <div class="form-row">
+                <div class="form-group">
+                    <label>Task Title</label>
+                    <input type="text" name="title" required>
+                </div>
+                <div class="form-group">
+                    <label>Assign To</label>
+                    <select name="assignedTo" required>
+                        <option value="">Select Employee</option>
+                        <option th:each="emp : ${employees}"
+                                th:value="${emp.id}"
+                                th:text="${emp.name}"></option>
+                    </select>
+                </div>
+            </div>
+
+            <div class="form-group" style="margin-bottom:18px;">
+                <label>Description</label>
+                <textarea name="description" rows="3" required></textarea>
+            </div>
+
+            <button type="submit">Create Task</button>
+        </form>
+    </div>
+
+    <!-- All Tasks -->
+    <div class="section">
+        <h2>All Tasks</h2>
+        <table>
+            <thead>
+                <tr>
+                    <th>ID</th>
+                    <th>Title</th>
+                    <th>Description</th>
+                    <th>Assigned To</th>
+                    <th>Status</th>
+                    <th>Created At</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr th:each="task : ${tasks}">
+                    <td th:text="${task.id}"></td>
+                    <td th:text="${task.title}"></td>
+                    <td th:text="${task.description}"></td>
+                    <td>
+                        <span th:each="emp : ${employees}"
+                              th:if="${emp.id == task.assignedToEmployeeId}"
+                              th:text="${emp.name}"></span>
+                    </td>
+                    <td>
+                        <span class="status-badge"
+                              th:classappend="${task.status == T(com.aditya.tasktracker.model.TaskStatus).DONE}
+                              ? 'status-done' : 'status-todo'"
+                              th:text="${task.status}">
+                        </span>
+                    </td>
+                    <td th:text="${#temporals.format(task.createdAt, 'dd MMM yyyy HH:mm')}"></td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+
+    <!-- All Employees -->
+    <div class="section">
+        <h2>All Employees</h2>
+        <table>
+            <thead>
+                <tr>
+                    <th>ID</th>
+                    <th>Name</th>
+                    <th>Email</th>
+                    <th>Role</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr th:each="emp : ${employees}">
+                    <td th:text="${emp.id}"></td>
+                    <td th:text="${emp.name}"></td>
+                    <td th:text="${emp.email}"></td>
+                    <td>
+                        <span class="role-badge"
+                              th:classappend="${emp.role == T(com.aditya.tasktracker.model.Role).ADMIN}
+                              ? 'role-admin' : 'role-employee'"
+                              th:text="${emp.role}">
+                        </span>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+
+</div>
+
+</body>
+</html>
